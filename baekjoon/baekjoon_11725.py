@@ -1,6 +1,4 @@
 # baekjoon_11725
-import sys
-
 
 # v2
 # def dfs(node_e):
@@ -41,24 +39,153 @@ import sys
 
 
 # v3
+# import collections
+#
+# def bfs(node_e):
+#     queue = collections.deque()
+#     visited = [0] * (N + 1)
+#
+#     queue.append(1)
+#     visited[1] = 1
+#     parents = 0
+#
+#     while queue:
+#         node = queue.popleft()
+#         if node == node_e:
+#             return parents
+#         elif node in adj_list[node_e]:
+#             parents = node
+#         for curr in adj_list[node]:
+#             if visited[curr] == 0:
+#                 queue.append(curr)
+#                 visited[curr] = 1
+#
+#
+# N = int(input())
+# adj_list = [[] for _ in range(N+1)]
+# res = 0
+# for __ in range(N-1):
+#     n1, n2 = map(int, sys.stdin.readline().split())
+#     adj_list[n1].append(n2)
+#     adj_list[n2].append(n1)
+#
+# for i in range(2, N+1):
+#     res = bfs(i)
+#     print(res)
+
+
+# v4
+# import collections
+# import sys
+#
+# def bfs(node_e):
+#     queue = collections.deque()
+#     visited = [0] * (N + 1)
+#
+#     queue.append([1, 0])
+#     visited[1] = 1
+#
+#     while queue:
+#         node, depth_n = queue.popleft()
+#         for curr, depth_c in adj_list[node]:
+#             if visited[curr] == 0:
+#                 depth_c = depth_n + 1
+#                 if curr == node_e and depth_c > depth_n:
+#                     return node
+#                 queue.append([curr, depth_c])
+#                 visited[curr] = 1
+#
+#
+# N = int(input())
+# adj_list = [[] for _ in range(N+1)]
+# res = 0
+# for __ in range(N-1):
+#     n1, n2 = map(int, sys.stdin.readline().split())
+#     adj_list[n1].append([n2, 0])
+#     adj_list[n2].append([n1, 0])
+#
+# for i in range(2, N+1):
+#     res = bfs(i)
+#     print(res)
+
+
+#v5
+# import collections
+# import sys
+#
+# def bfs(node_e):
+#     queue = collections.deque()
+#     visited = [0] * (N + 1)
+#
+#     queue.append(1)
+#     visited[1] = 1
+#
+#     while queue:
+#         node = queue.popleft()
+#         for curr in adj_list[node]:
+#             if curr == node_e:
+#                 return node
+#             if visited[curr] == 0:
+#                 queue.append(curr)
+#                 visited[curr] = 1
+#
+#
+# N = int(input())
+# adj_list = [[] for _ in range(N+1)]
+# res = 0
+# for __ in range(N-1):
+#     n1, n2 = map(int, sys.stdin.readline().split())
+#     adj_list[n1].append(n2)
+#     adj_list[n2].append(n1)
+#
+# for i in range(2, N+1):
+#     res = bfs(i)
+#     print(res)
+
+# v6
+# import collections
+# import sys
+#
+# def bfs(node_e):
+#     queue = collections.deque()
+#     queue.append(1)
+#
+#     while queue:
+#         node = queue.popleft()
+#         for curr in adj_list[node]:
+#             if curr == node_e:
+#                 return node
+#             queue.append(curr)
+#
+#
+# N = int(input())
+# adj_list = [[] for _ in range(N+1)]
+# res = 0
+# for __ in range(N-1):
+#     n1, n2 = map(int, sys.stdin.readline().split())
+#     adj_list[n1].append(n2)
+#     adj_list[n2].append(n1)
+#
+# for i in range(2, N+1):
+#     res = bfs(i)
+#     print(res)
+
+# v7
 import collections
+import sys
 
-def bfs(node_e):
+def bfs():
     queue = collections.deque()
-    visited = [0] * (N + 1)
-
     queue.append(1)
+
+    visited = [0] * (N + 1)
     visited[1] = 1
-    parents = 0
 
     while queue:
         node = queue.popleft()
-        if node == node_e:
-            return parents
-        elif node in adj_list[node_e]:
-            parents = node
         for curr in adj_list[node]:
             if visited[curr] == 0:
+                parents[curr] = node
                 queue.append(curr)
                 visited[curr] = 1
 
@@ -66,11 +193,14 @@ def bfs(node_e):
 N = int(input())
 adj_list = [[] for _ in range(N+1)]
 res = 0
+parents = [0]*(N+1)
+
 for __ in range(N-1):
     n1, n2 = map(int, sys.stdin.readline().split())
     adj_list[n1].append(n2)
     adj_list[n2].append(n1)
 
+bfs()
+
 for i in range(2, N+1):
-    res = bfs(i)
-    print(res)
+    print(parents[i])
