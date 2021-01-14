@@ -64,7 +64,7 @@ def tomato_bfs():
     dy = [-1, 0, 1, 0]
 
     queue = collections.deque(start_point)
-
+    print(queue)
 
     while queue:
         i_x, j_y = queue.popleft()
