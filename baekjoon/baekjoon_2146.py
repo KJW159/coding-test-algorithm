@@ -430,3 +430,72 @@
 #             bridge_min = bridge
 # print(bridge_min)
 
+# v6
+from collections import deque, defaultdict
+import math, sys
+
+dx = [0,-1,0,1]
+dy = [-1,0,1,0]
+
+def finding_coast(f_i, f_j, marking_num):
+    queue_c = deque()
+    queue_c.append([f_i, f_j])
+    visited2[f_i][f_j] = 1
+
+    while queue_c:
+        f_i, f_j = queue_c.popleft()
+        for f in range(4):
+            f_x = f_i + dx[f]
+            f_y = f_j + dy[f]
+            if 0 <= f_x < N and 0 <= f_y < N and visited2[f_x][f_y] == 0:
+                if arr[f_x][f_y] == 0 and [f_i, f_j] not in coast[marking_num]:
+                    coast[marking_num].append([f_i, f_j])
+                    # visited2[f_x][f_y] = 1
+                if arr[f_x][f_y] == 1:
+                    visited2[f_x][f_y] = 1
+                    queue_c.append([f_x, f_y])
+
+
+def finding_bridge(island_num):
+    visited = [[-1] * N for ___ in range(N)]
+    queue_b = deque()
+    for land in coast[island_num]:
+        queue_b.append(land)
+        visited[land[0]][land[1]] = 0
+    bridge = math.inf
+
+    while queue_b:
+        s_i, s_j = queue_b.popleft()
+        for c in range(4):
+            x = s_i + dx[c]
+            y = s_j + dy[c]
+            if 0 <= x < N and 0 <= y < N and visited[x][y] == -1:
+                if arr[x][y] == 0:
+                    visited[x][y] = visited[s_i][s_j] + 1
+                    queue_b.append([x, y])
+                if arr[x][y] == 1 and [x,y] not in coast[island_num] and visited[s_i][s_j] != 0:
+                    bridge = min(visited[s_i][s_j], bridge)
+    return bridge
+
+N = int(input())
+arr = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
+
+coast = defaultdict(list)
+bridge_min = math.inf
+lands = []
+
+visited2 = [[0]*N for __ in range(N)]
+marking_num = 0
+for i in range(N):
+    for j in range(N):
+        if visited2[i][j] == 0 and arr[i][j] == 1:
+            marking_num += 1
+            finding_coast(i,j, marking_num)
+
+for island_num in range(1, marking_num+1):
+    bridge = finding_bridge(island_num)
+    if bridge < bridge_min:
+        bridge_min = bridge
+
+print(bridge_min)
+
