@@ -57,50 +57,105 @@ import collections
 # print('{}'.format(res))
 
 #v3
-import collections
+# import collections
+#
+# def tomato_bfs():
+#     dx = [0, -1, 0, 1]
+#     dy = [-1, 0, 1, 0]
+#
+#     queue = collections.deque(start_point)
+#     print(queue)
+#
+#     while queue:
+#         i_x, j_y = queue.popleft()
+#         for c in range(4):
+#             x = i_x + dx[c]
+#             y = j_y + dy[c]
+#             if 0 <= x < N and 0 <= y < M:
+#                 if arr[x][y] == 0:
+#                     queue.append([x,y])
+#                     arr[x][y] = arr[i_x][j_y] + 1
+#
+# M, N = list(map(int, input().split()))
+# arr = [list(map(int, input().split())) for _ in range(N)]
+# start_point = []
+# date = 0
+# res = True
+#
+# for i in range(N):
+#     for j in range(M):
+#         if arr[i][j] == 1:
+#             start_point.append([i,j])
+#
+# tomato_bfs()
+#
+# for i in arr:
+#     if 0 in i:
+#         res = False
+#         break
+#     for j in i:
+#         if j > date:
+#             date = j
+#
+# if res:
+#     print(date-1)
+# else:
+#     print(-1)
 
-def tomato_bfs():
-    dx = [0, -1, 0, 1]
-    dy = [-1, 0, 1, 0]
 
-    queue = collections.deque(start_point)
-    print(queue)
+# re-v1
+
+from collections import deque
+
+
+def bfs():
+    dx = [0,-1,0,1]
+    dy = [-1,0,1,0]
+
+    queue = deque()
+
+    for tomato in tomatos:
+        queue.append([tomato[0], tomato[1]])
 
     while queue:
-        i_x, j_y = queue.popleft()
+        t_i, t_j = queue.popleft()
         for c in range(4):
-            x = i_x + dx[c]
-            y = j_y + dy[c]
+            x = t_i + dx[c]
+            y = t_j + dy[c]
             if 0 <= x < N and 0 <= y < M:
-                if arr[x][y] == 0:
+                if box[x][y] == 0:
                     queue.append([x,y])
-                    arr[x][y] = arr[i_x][j_y] + 1
+                    box[x][y] = box[t_i][t_j] + 1
 
-M, N = list(map(int, input().split()))
-arr = [list(map(int, input().split())) for _ in range(N)]
-start_point = []
-date = 0
-res = True
 
+M, N = map(int, input().split())
+box = [list(map(int, input().split())) for _ in range(N)]
+res = 0
+days = 0
+tomatos = []
 for i in range(N):
     for j in range(M):
-        if arr[i][j] == 1:
-            start_point.append([i,j])
-
-tomato_bfs()
-
-for i in arr:
-    if 0 in i:
-        res = False
+        if box[i][j] == 1:
+            tomatos.append([i,j])
+bfs()
+trg = False
+for i in range(N):
+    if trg:
+        res = -1
         break
-    for j in i:
-        if j > date:
-            date = j
+    for j in range(M):
+        if box[i][j] == 0:
+            trg = True
+            break
+        elif box[i][j] > days:
+            days = box[i][j]
 
-if res:
-    print(date-1)
+if trg:
+    print(res)
 else:
-    print(-1)
+    print(days-1)
+
+
 
 
 
