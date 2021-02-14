@@ -52,6 +52,68 @@
 # print(res)
 
 # re-v1
+# from collections import deque
+#
+# def moving_monkey(s_i, s_j, queue, cnt_h):
+#     dx = [0,-1,0,1]
+#     dy = [-1,0,1,0]
+#
+#     for m in range(4):
+#         x = s_i + dx[m]
+#         y = s_j + dy[m]
+#         if 0 <= x < H and 0 <= y < W:
+#             if visited[cnt_h][x][y] == -1 and arr[x][y] == 0:
+#                 queue.append([x, y, cnt_h])
+#                 visited[cnt_h][x][y] = visited[cnt_h][s_i][s_j] + 1
+#
+# def moving_horse(s_i, s_j, queue, cnt_h):
+#     dx = [-1,-2,-2,-1,1,2,2,1]
+#     dy = [-2,-1,1,2,2,1,-1,-2]
+#
+#     for h in range(8):
+#         x = s_i + dx[h]
+#         y = s_j + dy[h]
+#         if 0 <= x < H and 0 <= y < W:
+#             if visited[cnt_h+1][x][y] == -1 and arr[x][y] == 0:
+#                 queue.append([x,y, cnt_h+1])
+#                 visited[cnt_h+1][x][y] = visited[cnt_h][s_i][s_j] + 1
+#
+#
+# def bfs(K):
+#
+#     queue = deque()
+#     queue.append([0,0,0])
+#
+#     for i in range(K+1):
+#         visited[i][0][0] = 0
+#     step_tmp = -1
+#
+#     while queue:
+#         s_i, s_j, cnt_h = queue.popleft()
+#         if s_i == H-1 and s_j == W-1:
+#             step_tmp = visited[cnt_h][s_i][s_j]
+#             break
+#
+#         if cnt_h < K:
+#             moving_monkey(s_i, s_j, queue, cnt_h)
+#             moving_horse(s_i, s_j, queue, cnt_h)
+#         else:
+#             moving_monkey(s_i, s_j, queue, cnt_h)
+#     return step_tmp
+#
+#
+# K = int(input())
+# W, H = map(int, input().split())
+#
+# arr = [list(map(int, input().split())) for _ in range(H)]
+#
+#
+# visited = [[[-1]*W for _ in range(H)] for __ in range(K+1)]
+#
+# step = bfs(K)
+# print(step)
+
+# re-v2
 from collections import deque
 
 def moving_monkey(s_i, s_j, queue, cnt_h):
@@ -95,10 +157,8 @@ def bfs(K):
             break
 
         if cnt_h < K:
-            moving_monkey(s_i, s_j, queue, cnt_h)
             moving_horse(s_i, s_j, queue, cnt_h)
-        else:
-            moving_monkey(s_i, s_j, queue, cnt_h)
+        moving_monkey(s_i, s_j, queue, cnt_h)
     return step_tmp
 
 
