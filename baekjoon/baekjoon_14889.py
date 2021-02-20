@@ -87,6 +87,40 @@
 # print(res)
 
 # v3
+# import math
+#
+# def combinations1(arr, r):
+#     for i in range(len(arr)):
+#         if r == 1:
+#             yield [arr[i]]
+#         else:
+#             for next in combinations1(arr[i+1:], r-1):
+#                 yield [arr[i]] + next
+#
+# def checking_ability(arr):
+#     score = 0
+#     for members in combinations1(arr, 2):
+#         m1, m2 = members
+#         score += (company[m1][m2]+company[m2][m1])
+#
+#     return score
+#
+# N = int(input())
+# company = [list(map(int, input().split())) for _ in range(N)]
+#
+# res = math.inf
+# people = set(range(N))
+# for start_team in combinations1(list(range(N)), N // 2):
+#     start_score = checking_ability(start_team)
+#     start_team = set(start_team)
+#     link_team = list(people - start_team)
+#     link_score = checking_ability(link_team)
+#     res = min(res, abs(start_score - link_score))
+#
+# print(res)
+
+
+# v4
 import math
 
 def combinations1(arr, r):
@@ -99,10 +133,9 @@ def combinations1(arr, r):
 
 def checking_ability(arr):
     score = 0
-    for members in combinations1(arr, 2):
-        m1, m2 = members
-        score += (company[m1][m2]+company[m2][m1])
-
+    for i in range(N//2):
+        for j in range(i+1, N//2):
+            score += (company[arr[i]][arr[j]]+company[arr[j]][arr[i]])
     return score
 
 N = int(input())
