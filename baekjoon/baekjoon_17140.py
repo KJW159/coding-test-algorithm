@@ -71,6 +71,60 @@
 
 
 # v2
+# def operation(operation, arr):
+#     if operation == 1:
+#         arr = list(zip(*arr))
+#     max_len = 0
+#     N = len(arr)
+#     for i in range(N):
+#         max_num = max(arr[i])
+#         counts = [[x,0] for x in range(max_num+1)]
+#         new_row = []
+#         for num in arr[i]:
+#             counts[num][1] += 1
+#         counts.sort(key=lambda x: (x[1], x[0]))
+#         for j in range(max_num+1):
+#             if counts[j][0] == 0 or counts[j][1] == 0:
+#                 continue
+#             new_row.extend(counts[j])
+#         new_row_len = len(new_row)
+#         if new_row_len >= 100:
+#             new_row = new_row[:100]
+#         arr[i] = new_row
+#         max_len = max(max_len, new_row_len)
+#     # 0 채우기.
+#     for i in range(N):
+#         len_gap = max_len-len(arr[i])
+#         if len_gap != 0:
+#             arr[i].extend([0]*len_gap)
+#     if operation == 1:
+#         arr = list(zip(*arr))
+#
+#     return arr
+#
+# r,c,k = map(int, input().split())
+#
+# arr = [list(map(int, input().split())) for _ in range(3)]
+#
+# cnt = 0
+# while True:
+#     if 0<= r-1 < len(arr) and 0<= c-1 < len(arr[0]):
+#         if arr[r-1][c-1] == k:
+#             break
+#     if len(arr) >= len(arr[0]):
+#         arr = operation(0, arr)
+#         cnt += 1
+#     elif len(arr) < len(arr[0]):
+#         arr = operation(1, arr)
+#         cnt += 1
+#     if cnt > 100:
+#         cnt = -1
+#         break
+#
+# print(cnt)
+
+
+# v3
 def operation(operation, arr):
     if operation == 1:
         arr = list(zip(*arr))
@@ -78,15 +132,17 @@ def operation(operation, arr):
     N = len(arr)
     for i in range(N):
         max_num = max(arr[i])
-        counts = [[x,0] for x in range(max_num+1)]
+        counts = [0]*101
         new_row = []
+        tmp = []
         for num in arr[i]:
-            counts[num][1] += 1
-        counts.sort(key=lambda x: (x[1], x[0]))
-        for j in range(max_num+1):
-            if counts[j][0] == 0 or counts[j][1] == 0:
-                continue
-            new_row.extend(counts[j])
+            counts[num] += 1
+        for nx in range(1, 101):
+            if counts[nx]:
+                tmp.append([nx,counts[nx]])
+        tmp.sort(key=lambda x: (x[1], x[0]))
+        for value in tmp:
+            new_row.extend(value)
         new_row_len = len(new_row)
         if new_row_len >= 100:
             new_row = new_row[:100]
