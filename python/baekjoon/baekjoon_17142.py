@@ -265,94 +265,349 @@
 
 
 # v4
-import collections
+# import collections
+#
+# def combinations_virus(arr, r):
+#     for c in range(len(arr)):
+#         if r == 1:
+#             yield [arr[c]]
+#         else:
+#             for next in combinations_virus(arr[c+1:], r-1):
+#                 yield [arr[c]] + next
+#
+# def bfs(viruses):
+#     dx = [0, -1, 0, 1]
+#     dy = [-1, 0, 1, 0]
+#
+#     visited = [[-1]*N for ___ in range(N)]
+#     # visited_tmp2 = 0
+#
+#     queue = collections.deque()
+#     s_cnt = 0
+#     time_cnt = 0
+#
+#     for virus in viruses:
+#         # trg가 다른 곳에서 켜지고 바로 0을 만날때 혼동을 방지하기 위해서
+#         # 자기가 따라온 곳에서 trg가 켜진것인지 아니면 다른 곳에서 켜진 것인지 알기 위해 같이 넣어줌.
+#         v1, v2, virus_trg, visited_tmp = virus
+#         queue.append([v1, v2, 0, 0])
+#         s_cnt += 1
+#         visited[v1][v2] = 0
+#
+#     while queue:
+#         s_i, s_j, virus_trg, visited_tmp = queue.popleft()
+#         for k in range(4):
+#             visited_tmp2 = visited_tmp
+#             x = s_i + dx[k]
+#             y = s_j + dy[k]
+#             if 0 <= x < N and 0 <= y < N:
+#                 if lab[x][y] != 1 and visited[x][y] == -1:
+#
+#                     # 0인데 virus_trg가 꺼져 있을때
+#                     if lab[x][y] == 0 and virus_trg == 0:
+#                         visited[x][y] = visited[s_i][s_j] + 1
+#
+#                     # 0인데 virus_trg가 켜져 있을때
+#                     if lab[x][y] == 0 and virus_trg == 1:
+#                         visited_tmp += visited[s_i][s_j]
+#                         visited[x][y] = visited_tmp + 1
+#                         visited_tmp = 0
+#                         virus_trg = 0
+#
+#                     # 2(비활성화 바이러스)를 만났을때
+#                     if lab[x][y] == 2:
+#                         virus_trg = 1
+#                         visited_tmp2 += 1
+#                         visited[x][y] = visited[s_i][s_j]
+#                     s_cnt += 1
+#                     queue.append([x, y, virus_trg, visited_tmp2])
+#
+#
+#     for i2 in range(N):
+#         for j2 in range(N):
+#             if visited[i2][j2] > time_cnt:
+#                 time_cnt = visited[i2][j2]
+#
+#     return s_cnt, time_cnt
+#
+#
+# N, M = map(int, input().split())
+#
+# lab = [list(map(int, input().split())) for _ in range(N)]
+#
+# virus_list = []
+# space = 0
+# time = N*N
+# res = 0
+# for i in range(N):
+#     for j in range(N):
+#         if lab[i][j] == 2:
+#             virus_list.append([i, j, 0, 0])
+#         if lab[i][j] != 1:
+#             space += 1
+#
+# for viruses in combinations_virus(virus_list, M):
+#     cnt_tmp, time_tmp = bfs(viruses)
+#
+#     if cnt_tmp == space:
+#         time = min(time, time_tmp)
+#         res = time
+#     elif time == N*N:
+#         res = -1
+# print(res)
 
-def combinations_virus(arr, r):
-    for c in range(len(arr)):
-        if r == 1:
-            yield [arr[c]]
-        else:
-            for next in combinations_virus(arr[c+1:], r-1):
-                yield [arr[c]] + next
+# re-v1
+# from collections import deque
+# import math
+#
+#
+# def combinations1(arr, r):
+#     for i in range(len(arr)):
+#         if r == 1:
+#             yield [arr[i]]
+#         else:
+#             for next in combinations1(arr[i+1:], r-1):
+#                 yield [arr[i]] + next
+#
+# def bfs(viruses_activated, safety_zone_tmp):
+#     visited = [[-1]*N for _ in range(N)]
+#     queue = deque()
+#
+#     for v_i, v_j in viruses_activated:
+#         queue.append([v_i, v_j])
+#         visited[v_i][v_j] = 0
+#
+#     min_time = 0
+#
+#     while queue:
+#         v_i, v_j = queue.popleft()
+#         for c in range(4):
+#             x = v_i + dx[c]
+#             y = v_j + dy[c]
+#             if 0 <= x < N and 0 <= y < N:
+#                 if lab[x][y] == 0 and visited[x][y] == -1:
+#                     queue.append([x,y])
+#                     visited[x][y] = visited[v_i][v_j] + 1
+#                     min_time = max(min_time, visited[x][y])
+#                     safety_zone_tmp -= 1
+#
+#     return min_time, safety_zone_tmp
+#
+# N, M = map(int, input().split())
+# lab = [list(map(int, input().split())) for _ in range(N)]
+# viruses = []
+#
+# dx = [0,-1,0,1]
+# dy = [-1,0,1,0]
+#
+# safety_zone = 0
+# for i in range(N):
+#     for j in range(N):
+#         if lab[i][j] == 2:
+#             viruses.append([i,j])
+#         if lab[i][j] == 0:
+#             safety_zone += 1
+#
+# res = math.inf
+# for viruses_activated in combinations1(viruses, M):
+#     min_time, zone_left = bfs(viruses_activated, safety_zone)
+#     if zone_left != 0:
+#         continue
+#     res = min(res, min_time)
+#
+# if res == math.inf:
+#     print(-1)
+# else:
+#     print(res)
 
-def bfs(viruses):
-    dx = [0, -1, 0, 1]
-    dy = [-1, 0, 1, 0]
+# re-v2
+# from collections import deque
+# import math
+#
+#
+# def combinations1(arr, r):
+#     for i in range(len(arr)):
+#         if r == 1:
+#             yield [arr[i]]
+#         else:
+#             for next in combinations1(arr[i+1:], r-1):
+#                 yield [arr[i]] + next
+#
+# def bfs(viruses_activated, safety_zone_tmp):
+#     visited = [[-1]*N for _ in range(N)]
+#     queue = deque()
+#
+#     for v_i, v_j in viruses_activated:
+#         queue.append([v_i, v_j])
+#         visited[v_i][v_j] = 0
+#     # 여기 0에서 -1로 수정함.
+#     min_time = -1
+#
+#     while queue:
+#         v_i, v_j = queue.popleft()
+#         for c in range(4):
+#             x = v_i + dx[c]
+#             y = v_j + dy[c]
+#             if 0 <= x < N and 0 <= y < N:
+#                 if lab[x][y] == 0 and visited[x][y] == -1:
+#                     queue.append([x,y])
+#                     visited[x][y] = visited[v_i][v_j] + 1
+#                     min_time = max(min_time, visited[x][y])
+#                     safety_zone_tmp -= 1
+#
+#     return min_time, safety_zone_tmp
+#
+# N, M = map(int, input().split())
+# lab = [list(map(int, input().split())) for _ in range(N)]
+# viruses = []
+#
+# dx = [0,-1,0,1]
+# dy = [-1,0,1,0]
+#
+# safety_zone = 0
+# for i in range(N):
+#     for j in range(N):
+#         if lab[i][j] == 2:
+#             viruses.append([i,j])
+#         if lab[i][j] == 0:
+#             safety_zone += 1
+#
+# res = math.inf
+# for viruses_activated in combinations1(viruses, M):
+#     min_time, zone_left = bfs(viruses_activated, safety_zone)
+#     if zone_left != 0:
+#         continue
+#     res = min(res, min_time)
+#
+# if res == math.inf:
+#     print(-1)
+# else:
+#     print(res)
 
-    visited = [[-1]*N for ___ in range(N)]
-    # visited_tmp2 = 0
 
-    queue = collections.deque()
-    s_cnt = 0
-    time_cnt = 0
+# re-v3
+# from collections import deque
+# import math
 
-    for virus in viruses:
-        # trg가 다른 곳에서 켜지고 바로 0을 만날때 혼동을 방지하기 위해서
-        # 자기가 따라온 곳에서 trg가 켜진것인지 아니면 다른 곳에서 켜진 것인지 알기 위해 같이 넣어줌.
-        v1, v2, virus_trg, visited_tmp = virus
-        queue.append([v1, v2, 0, 0])
-        s_cnt += 1
-        visited[v1][v2] = 0
+
+# def combinations1(arr, r):
+#     for i in range(len(arr)):
+#         if r == 1:
+#             yield [arr[i]]
+#         else:
+#             for next in combinations1(arr[i+1:], r-1):
+#                 yield [arr[i]] + next
+#
+# def bfs(viruses_activated, safety_zone_tmp):
+#     visited = [[-1]*N for _ in range(N)]
+#     queue = deque()
+#
+#     for v_i, v_j in viruses_activated:
+#         queue.append([v_i, v_j])
+#         visited[v_i][v_j] = 0
+#
+#     min_time = 0
+#
+#     while queue:
+#         v_i, v_j = queue.popleft()
+#         for c in range(4):
+#             x = v_i + dx[c]
+#             y = v_j + dy[c]
+#             if 0 <= x < N and 0 <= y < N:
+#                 if lab[x][y] == 0 and visited[x][y] == -1:
+#                     queue.append([x,y])
+#                     visited[x][y] = visited[v_i][v_j] + 1
+#                     min_time = max(min_time, visited[x][y])
+#                     safety_zone_tmp -= 1
+#                 if lab[x][y] == 2 and visited[x][y] == -1:
+#                     queue.append([x,y])
+#                     visited[x][y] = visited[v_i][v_j] + 1
+#
+#     return min_time, safety_zone_tmp
+#
+# N, M = map(int, input().split())
+# lab = [list(map(int, input().split())) for _ in range(N)]
+# viruses = []
+#
+# dx = [0,-1,0,1]
+# dy = [-1,0,1,0]
+#
+# safety_zone = 0
+# for i in range(N):
+#     for j in range(N):
+#         if lab[i][j] == 2:
+#             viruses.append([i,j])
+#         if lab[i][j] == 0:
+#             safety_zone += 1
+#
+# res = math.inf
+# for viruses_activated in combinations1(viruses, M):
+#     min_time, zone_left = bfs(viruses_activated, safety_zone)
+#     if zone_left != 0:
+#         continue
+#     res = min(res, min_time)
+#
+# if res == math.inf:
+#     print(-1)
+# else:
+#     print(res)
+
+
+# re-v4
+from itertools import combinations
+from collections import deque
+import math
+
+def bfs(viruses_activated, safety_zone_tmp):
+    visited = [[-1]*N for _ in range(N)]
+    queue = deque()
+
+    for v_i, v_j in viruses_activated:
+        queue.append([v_i, v_j])
+        visited[v_i][v_j] = 0
+
+    min_time = 0
 
     while queue:
-        s_i, s_j, virus_trg, visited_tmp = queue.popleft()
-        for k in range(4):
-            visited_tmp2 = visited_tmp
-            x = s_i + dx[k]
-            y = s_j + dy[k]
+        v_i, v_j = queue.popleft()
+        for c in range(4):
+            x = v_i + dx[c]
+            y = v_j + dy[c]
             if 0 <= x < N and 0 <= y < N:
-                if lab[x][y] != 1 and visited[x][y] == -1:
+                if lab[x][y] == 0 and visited[x][y] == -1:
+                    queue.append([x,y])
+                    visited[x][y] = visited[v_i][v_j] + 1
+                    min_time = max(min_time, visited[x][y])
+                    safety_zone_tmp -= 1
+                if lab[x][y] == 2 and visited[x][y] == -1:
+                    queue.append([x,y])
+                    visited[x][y] = visited[v_i][v_j] + 1
 
-                    # 0인데 virus_trg가 꺼져 있을때
-                    if lab[x][y] == 0 and virus_trg == 0:
-                        visited[x][y] = visited[s_i][s_j] + 1
-
-                    # 0인데 virus_trg가 켜져 있을때
-                    if lab[x][y] == 0 and virus_trg == 1:
-                        visited_tmp += visited[s_i][s_j]
-                        visited[x][y] = visited_tmp + 1
-                        visited_tmp = 0
-                        virus_trg = 0
-
-                    # 2(비활성화 바이러스)를 만났을때
-                    if lab[x][y] == 2:
-                        virus_trg = 1
-                        visited_tmp2 += 1
-                        visited[x][y] = visited[s_i][s_j]
-                    s_cnt += 1
-                    queue.append([x, y, virus_trg, visited_tmp2])
-
-
-    for i2 in range(N):
-        for j2 in range(N):
-            if visited[i2][j2] > time_cnt:
-                time_cnt = visited[i2][j2]
-
-    return s_cnt, time_cnt
-
+    return min_time, safety_zone_tmp
 
 N, M = map(int, input().split())
-
 lab = [list(map(int, input().split())) for _ in range(N)]
+viruses = []
 
-virus_list = []
-space = 0
-time = N*N
-res = 0
+dx = [0,-1,0,1]
+dy = [-1,0,1,0]
+
+safety_zone = 0
 for i in range(N):
     for j in range(N):
         if lab[i][j] == 2:
-            virus_list.append([i, j, 0, 0])
-        if lab[i][j] != 1:
-            space += 1
+            viruses.append([i,j])
+        if lab[i][j] == 0:
+            safety_zone += 1
 
-for viruses in combinations_virus(virus_list, M):
-    cnt_tmp, time_tmp = bfs(viruses)
+res = math.inf
+for viruses_activated in combinations(viruses, M):
+    min_time, zone_left = bfs(viruses_activated, safety_zone)
+    if zone_left != 0:
+        continue
+    res = min(res, min_time)
 
-    if cnt_tmp == space:
-        time = min(time, time_tmp)
-        res = time
-    elif time == N*N:
-        res = -1
-print(res)
-
+if res == math.inf:
+    print(-1)
+else:
+    print(res)
