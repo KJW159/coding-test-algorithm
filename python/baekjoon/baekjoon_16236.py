@@ -70,66 +70,128 @@
 # print(time)
 
 # re-v1
+# from collections import deque
+#
+# dx = [0,-1,0,1]
+# dy = [-1,0,1,0]
+#
+# def finding_fish(baby, baby_size):
+#     visited = [[-1]*N for _ in range(N)]
+#
+#     queue = deque()
+#     queue.append(baby)
+#     visited[baby[0]][baby[1]] = 0
+#
+#     fishes = []
+#     trg_tmp = False
+#     while queue:
+#         b_i, b_j = queue.popleft()
+#         for c in range(4):
+#             x = b_i + dx[c]
+#             y = b_j + dy[c]
+#             if 0 <= x < N and 0 <= y < N:
+#                 if visited[x][y] == -1:
+#                     if sea[x][y] == 0 or sea[x][y] == baby_size:
+#                         queue.append([x,y])
+#                         visited[x][y] = visited[b_i][b_j] + 1
+#                     if 0 < sea[x][y] < baby_size:
+#                         # queue.append([x, y])
+#                         visited[x][y] = visited[b_i][b_j] + 1
+#                         fishes.append([x, y, visited[x][y]])
+#     if fishes:
+#         trg_tmp = True
+#     return fishes, trg_tmp
+#
+#
+# N = int(input())
+#
+# sea = [list(map(int, input().split())) for _ in range(N)]
+#
+# baby = []
+# baby_size = 2
+# eating_cnt = 0
+# step = 0
+# for i in range(N):
+#     for j in range(N):
+#         if sea[i][j] == 9:
+#             baby = [i, j]
+#             sea[i][j] = 0
+#
+# while True:
+#     fishes, trg = finding_fish(baby, baby_size)
+#     if not trg:
+#         break
+#     else:
+#         fishes = sorted(fishes, key=lambda x: (x[2], x[0], x[1]))
+#         f_i, f_j, step_tmp = fishes[0]
+#         sea[f_i][f_j] = 0
+#         eating_cnt += 1
+#         step += step_tmp
+#         baby = [f_i, f_j]
+#         if eating_cnt == baby_size:
+#             baby_size += 1
+#             eating_cnt = 0
+#
+# print(step)
+
+
+# re-v2
 from collections import deque
+
+
+def finding_fishes(shark_position_tmp, shark_size_tmp):
+    s_i, s_j = shark_position_tmp
+    queue = deque()
+    queue.append([s_i, s_j])
+    visited = [[-1]*N for _ in range(N)]
+    visited[s_i][s_j] = 0
+    fishes_tmp = []
+
+    while queue:
+        s_i, s_j = queue.popleft()
+        for c in range(4):
+            x = s_i + dx[c]
+            y = s_j + dy[c]
+            if 0 <= x < N and 0 <= y < N and visited[x][y] == -1:
+                if 0 < sea[x][y] < shark_size_tmp:
+                    visited[x][y] = visited[s_i][s_j] + 1
+                    fishes_tmp.append([x, y, visited[x][y]])
+                if sea[x][y] == 0 or sea[x][y] == shark_size_tmp:
+                    queue.append([x,y])
+                    visited[x][y] = visited[s_i][s_j] + 1
+    return fishes_tmp
+
+
+N = int(input())
+sea = [list(map(int, input().split())) for _ in range(N)]
+shark_position = []
+shark_size = 2
+eating_cnt = 0
+res = 0
 
 dx = [0,-1,0,1]
 dy = [-1,0,1,0]
 
-def finding_fish(baby, baby_size):
-    visited = [[-1]*N for _ in range(N)]
 
-    queue = deque()
-    queue.append(baby)
-    visited[baby[0]][baby[1]] = 0
-
-    fishes = []
-    trg_tmp = False
-    while queue:
-        b_i, b_j = queue.popleft()
-        for c in range(4):
-            x = b_i + dx[c]
-            y = b_j + dy[c]
-            if 0 <= x < N and 0 <= y < N:
-                if visited[x][y] == -1:
-                    if sea[x][y] == 0 or sea[x][y] == baby_size:
-                        queue.append([x,y])
-                        visited[x][y] = visited[b_i][b_j] + 1
-                    if 0 < sea[x][y] < baby_size:
-                        # queue.append([x, y])
-                        visited[x][y] = visited[b_i][b_j] + 1
-                        fishes.append([x, y, visited[x][y]])
-    if fishes:
-        trg_tmp = True
-    return fishes, trg_tmp
-
-
-N = int(input())
-
-sea = [list(map(int, input().split())) for _ in range(N)]
-
-baby = []
-baby_size = 2
-eating_cnt = 0
-step = 0
 for i in range(N):
     for j in range(N):
         if sea[i][j] == 9:
-            baby = [i, j]
+            shark_position = [i, j]
             sea[i][j] = 0
 
+fishes = []
 while True:
-    fishes, trg = finding_fish(baby, baby_size)
-    if not trg:
+    fishes = finding_fishes(shark_position, shark_size)
+    if not fishes:
         break
     else:
-        fishes = sorted(fishes, key=lambda x: (x[2], x[0], x[1]))
-        f_i, f_j, step_tmp = fishes[0]
-        sea[f_i][f_j] = 0
+        fishes.sort(key=lambda x:(x[2],x[0],x[1]))
+        fish_x, fish_y, fish_size = fishes[0]
+        res += fish_size
+        shark_position = [fish_x, fish_y]
+        sea[fish_x][fish_y] = 0
         eating_cnt += 1
-        step += step_tmp
-        baby = [f_i, f_j]
-        if eating_cnt == baby_size:
-            baby_size += 1
+        if eating_cnt == shark_size:
+            shark_size += 1
             eating_cnt = 0
-
-print(step)
+print(res)
