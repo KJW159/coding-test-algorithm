@@ -239,65 +239,549 @@
 
 
 # v4
-from collections import deque
+# from collections import deque
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+#
+# N, M, K = map(int, input().split())
+# q = deque()
+# arr = [[deque() for _ in range(N+1)] for _ in range(N+1)]
+# for _ in range(M):
+#     r, c, m, s, d = map(int, input().split())
+#     arr[r][c].append([m, s, d])
+#     q.append([r, c])
+#
+# for _ in range(K):
+#     temp = []
+#     qlen = len(q)
+#     for _ in range(qlen):
+#         x, y = q.popleft()
+#         for _ in range(len(arr[x][y])):
+#             m, s, d = arr[x][y].popleft()
+#             nx = (s * dx[d] + x) % N
+#             ny = (s * dy[d] + y) % N
+#             q.append([nx, ny])
+#             temp.append([nx, ny, m, s, d])
+#
+#     for x, y, m, s, d in temp:
+#         arr[x][y].append([m, s, d])
+#
+#     for i in range(N):
+#         for j in range(N):
+#             if len(arr[i][j]) > 1:
+#                 nm, ns, odd, even, flag = 0, 0, 0, 0, 0
+#                 for idx, [m, s, d] in enumerate(arr[i][j]):
+#                     nm += m
+#                     ns += s
+#                     if idx == 0:
+#                         if d % 2 == 0:
+#                             even = 1
+#                         else:
+#                             odd = 1
+#                     else:
+#                         if even == 1 and d % 2 == 1:
+#                             flag = 1
+#                         elif odd == 1 and d % 2 == 0:
+#                             flag = 1
+#
+#                 nm //= 5
+#                 ns //= len(arr[i][j])
+#                 arr[i][j] = deque()
+#                 if nm != 0:
+#                     for idx in range(4):
+#                         nd = 2 * idx if flag == 0 else 2 * idx + 1
+#                         arr[i][j].append([nm, ns, nd])
+#     print(arr)
+# res = 0
+# for i in range(N):
+#     for j in range(N):
+#         if arr[i][j]:
+#             for info in arr[i][j]:
+#                 res += info[0]
+# print(res)
+
+
+
+# re-v1
+# from collections import defaultdict
+# import copy, math
+#
+# N, M, K = map(int, input().split())
+# # arr = [[0]*N for _ in range(N)]
+# fire_balls = defaultdict(list)
+# for _ in range(M):
+#     r, c, m, s, d = map(int, input().split())
+#     fire_balls[r-1,c-1].append([m,s,d])
+#     # arr[r-1][c-1] += 1
+#
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+#
+#
+# for k in range(K):
+#     # 이동하기, m,s,d
+#     fire_balls_tmp = defaultdict(list)
+#     for key in fire_balls:
+#         for fire_ball in fire_balls[key]:
+#             x = key[0]
+#             y = key[1]
+#             for i in range(fire_ball[1]):
+#                 x += dx[fire_ball[2]]
+#                 y += dy[fire_ball[2]]
+#             x %= N
+#             y %= N
+#             fire_balls_tmp[x,y].append(fire_ball)
+#
+#     fire_balls = copy.deepcopy(fire_balls_tmp)
+#     fire_balls_tmp = defaultdict(list)
+#
+#     # 2번 내용, m,s,d
+#     for key in fire_balls:
+#         ball_nums = len(fire_balls[key])
+#         if ball_nums >= 2:
+#             mass = 0
+#             speed = 0
+#             direction = 0
+#             trg1 = fire_balls[key][0][2] % 2
+#             trg2 = True
+#             for fire_ball in fire_balls[key]:
+#                 mass += fire_ball[0]
+#                 speed += fire_ball[1]
+#                 if trg2:
+#                     if fire_ball[2] % 2 != trg1:
+#                         trg2 = False
+#             mass = math.floor(mass/5)
+#             if mass != 0:
+#                 speed = math.floor(speed/ball_nums)
+#                 x = key[0]
+#                 y = key[1]
+#                 if trg2:
+#                     start = 0
+#                 else:
+#                     start = 1
+#                 for i in range(start, 8, 2):
+#                     nx = (x + dx[i]) % N
+#                     ny = (y + dy[i]) % N
+#                     fire_balls_tmp[nx,ny].append([mass, speed, i])
+#             else:
+#                 fire_balls[key] = []
+#     fire_balls = copy.deepcopy(fire_balls_tmp)
+#
+# res = 0
+# for key in fire_balls:
+#     for fire_ball in fire_balls[key]:
+#          res += fire_ball[0]
+#
+# print(res)
+
+# re-v2
+
+# from collections import defaultdict
+# import copy, math
+#
+# N, M, K = map(int, input().split())
+# # arr = [[0]*N for _ in range(N)]
+# fire_balls = defaultdict(list)
+# for _ in range(M):
+#     r, c, m, s, d = map(int, input().split())
+#     fire_balls[r-1,c-1].append([m,s,d])
+#     # arr[r-1][c-1] += 1
+#
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+#
+#
+# for k in range(K):
+#     # 이동하기, m,s,d
+#     fire_balls_tmp = defaultdict(list)
+#     for key in fire_balls:
+#         for fire_ball in fire_balls[key]:
+#             x = key[0]
+#             y = key[1]
+#             for i in range(fire_ball[1]):
+#                 x += dx[fire_ball[2]]
+#                 y += dy[fire_ball[2]]
+#             x %= N
+#             y %= N
+#             fire_balls_tmp[x,y].append(fire_ball)
+#
+#     fire_balls = copy.deepcopy(fire_balls_tmp)
+#     fire_balls_tmp = defaultdict(list)
+#
+#     # 2번 내용, m,s,d
+#     for key in fire_balls:
+#         ball_nums = len(fire_balls[key])
+#         if ball_nums >= 2:
+#             mass = 0
+#             speed = 0
+#             direction = 0
+#             trg1 = fire_balls[key][0][2] % 2
+#             trg2 = True
+#             for fire_ball in fire_balls[key]:
+#                 mass += fire_ball[0]
+#                 speed += fire_ball[1]
+#                 if trg2:
+#                     if fire_ball[2] % 2 != trg1:
+#                         trg2 = False
+#             mass = math.floor(mass/5)
+#             if mass != 0:
+#                 speed = math.floor(speed/ball_nums)
+#                 x = key[0]
+#                 y = key[1]
+#                 if trg2:
+#                     start = 0
+#                 else:
+#                     start = 1
+#                 tmp = []
+#                 for i in range(start, 8, 2):
+#                     tmp.append([mass, speed, i])
+#                 fire_balls_tmp[x,y] = tmp
+#             else:
+#                 fire_balls[key] = []
+#     fire_balls = copy.deepcopy(fire_balls_tmp)
+#
+# res = 0
+# print(fire_balls)
+# for key in fire_balls:
+#     for fire_ball in fire_balls[key]:
+#          res += fire_ball[0]
+#
+# print(res)
+
+# re-v3
+# from collections import defaultdict
+# import copy, math
+#
+# N, M, K = map(int, input().split())
+# # arr = [[0]*N for _ in range(N)]
+# fire_balls = defaultdict(list)
+# for _ in range(M):
+#     r, c, m, s, d = map(int, input().split())
+#     fire_balls[r-1,c-1].append([m,s,d])
+#     # arr[r-1][c-1] += 1
+#
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+#
+#
+# for k in range(K):
+#     # 이동하기, m,s,d
+#     fire_balls_tmp = defaultdict(list)
+#     for key in fire_balls:
+#         for fire_ball in fire_balls[key]:
+#             x = key[0]
+#             y = key[1]
+#             for i in range(fire_ball[1]):
+#                 x += dx[fire_ball[2]]
+#                 y += dy[fire_ball[2]]
+#             x %= N
+#             y %= N
+#             fire_balls_tmp[x,y].append(fire_ball)
+#
+#     fire_balls = copy.deepcopy(fire_balls_tmp)
+#
+#     # 2번 내용, m,s,d
+#     for key in fire_balls:
+#         ball_nums = len(fire_balls[key])
+#         if ball_nums >= 2:
+#             mass = 0
+#             speed = 0
+#             direction = 0
+#             trg1 = fire_balls[key][0][2] % 2
+#             trg2 = True
+#             for fire_ball in fire_balls[key]:
+#                 mass += fire_ball[0]
+#                 speed += fire_ball[1]
+#                 if trg2:
+#                     if fire_ball[2] % 2 != trg1:
+#                         trg2 = False
+#             mass = math.floor(mass/5)
+#             if mass != 0:
+#                 speed = math.floor(speed/ball_nums)
+#                 if trg2:
+#                     start = 0
+#                 else:
+#                     start = 1
+#                 tmp = []
+#                 for i in range(start, 8, 2):
+#                     tmp.append([mass, speed, i])
+#                 fire_balls[key[0],key[1]] = tmp
+#             else:
+#                 fire_balls[key[0],key[1]] = []
+#
+# res = 0
+# for key in fire_balls:
+#     for fire_ball in fire_balls[key]:
+#          res += fire_ball[0]
+#
+# print(res)
+
+
+# re-v4
+# from collections import defaultdict
+# import math
+#
+# N, M, K = map(int, input().split())
+# fire_balls = defaultdict(list)
+# for _ in range(M):
+#     r, c, m, s, d = map(int, input().split())
+#     fire_balls[r-1,c-1].append([m,s,d])
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+#
+# for k in range(K):
+#     fire_balls_tmp = defaultdict(list)
+#     for key in fire_balls:
+#         for fire_ball in fire_balls[key]:
+#             x = key[0]
+#             y = key[1]
+#             for i in range(fire_ball[1]):
+#                 x += dx[fire_ball[2]]
+#                 y += dy[fire_ball[2]]
+#             x %= N
+#             y %= N
+#             fire_balls_tmp[x,y].append(fire_ball)
+#
+#     fire_balls = defaultdict(list)
+#
+#     for key in fire_balls_tmp:
+#         ball_nums = len(fire_balls_tmp[key])
+#         if ball_nums >= 2:
+#             mass = 0
+#             speed = 0
+#             direction = 0
+#             trg1 = fire_balls_tmp[key][0][2] % 2
+#             trg2 = True
+#             for fire_ball in fire_balls_tmp[key]:
+#                 mass += fire_ball[0]
+#                 speed += fire_ball[1]
+#                 if trg2:
+#                     if fire_ball[2] % 2 != trg1:
+#                         trg2 = False
+#             mass = math.floor(mass/5)
+#             if mass != 0:
+#                 speed = math.floor(speed/ball_nums)
+#                 if trg2:
+#                     start = 0
+#                 else:
+#                     start = 1
+#                 tmp = []
+#                 for i in range(start, 8, 2):
+#                     tmp.append([mass, speed, i])
+#                 fire_balls[key[0],key[1]] = tmp
+#         else:
+#             fire_balls[key[0],key[1]] = fire_balls_tmp[key]
+#
+# res = 0
+# for key in fire_balls:
+#     for fire_ball in fire_balls[key]:
+#          res += fire_ball[0]
+#
+# print(res)
+
+# re-v5
+
+# from collections import defaultdict
+# import math
+
+# N, M, K = map(int, input().split())
+# fire_balls = defaultdict(list)
+# for _ in range(M):
+#     r, c, m, s, d = map(int, input().split())
+#     fire_balls[r-1,c-1].append([m,s,d])
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+#
+# for k in range(K):
+#     fire_balls_tmp = defaultdict(list)
+#     for key in fire_balls:
+#         for fire_ball in fire_balls[key]:
+#             x = key[0]
+#             y = key[1]
+#             x = (x + dx[fire_ball[2]] * fire_ball[1]) % N
+#             y = (y + dy[fire_ball[2]] * fire_ball[1]) % N
+#             fire_balls_tmp[x,y].append(fire_ball)
+#
+#     fire_balls = defaultdict(list)
+#
+#     for key in fire_balls_tmp:
+#         ball_nums = len(fire_balls_tmp[key])
+#         if ball_nums >= 2:
+#             mass = 0
+#             speed = 0
+#             direction = 0
+#             trg1 = fire_balls_tmp[key][0][2] % 2
+#             trg2 = True
+#             for fire_ball in fire_balls_tmp[key]:
+#                 mass += fire_ball[0]
+#                 speed += fire_ball[1]
+#                 if trg2:
+#                     if fire_ball[2] % 2 != trg1:
+#                         trg2 = False
+#             mass = math.floor(mass/5)
+#             if mass != 0:
+#                 speed = math.floor(speed/ball_nums)
+#                 if trg2:
+#                     start = 0
+#                 else:
+#                     start = 1
+#                 for i in range(start, 8, 2):
+#                     fire_balls[key[0],key[1]].append([mass, speed, i])
+#         else:
+#             fire_balls[key[0],key[1]] = fire_balls_tmp[key]
+#
+# res = 0
+# for key in fire_balls:
+#     for fire_ball in fire_balls[key]:
+#          res += fire_ball[0]
+#
+# print(res)
+
+# re-v6
+# import sys
+# from collections import defaultdict
+# input = sys.stdin.readline
+#
+# N,M,K = map(int, input().split())
+# balls = defaultdict(list)
+# for _ in range(M):
+#     r,c,m,s,d = map(int, input().split())
+#     balls[(r-1,c-1)].append([m,s,d])
+#
+# dx = [-1,-1,0,1,1,1,0,-1]
+# dy = [0,1,1,1,0,-1,-1,-1]
+#
+# for _ in range(K):
+#     ball_tmp1 = []
+#     for key in balls:
+#         i, j = key
+#         for ball in balls[key]:
+#             m, s, d = ball
+#             x = (i + dx[d]*s) % N
+#             y = (j + dy[d]*s) % N
+#             ball_tmp1.append([x,y,m,s,d])
+#             # balls[(x,y)].append([m,s,d])
+#     balls = defaultdict(list)
+#     for tmp in ball_tmp1:
+#         balls[(tmp[0],tmp[1])].append([tmp[2],tmp[3],tmp[4]])
+#
+#     ball_tmp2 = []
+#     for key in balls:
+#         ball_nums = len(balls[key])
+#         if ball_nums >= 2:
+#             mass = 0
+#             speed = 0
+#             direction = balls[key][0][2] % 2
+#             trg = True
+#             for ball in balls[key]:
+#                 mass += ball[0]
+#                 speed += ball[1]
+#                 if direction != (ball[2]%2):
+#                     trg = False
+#             mass = int(mass/5)
+#             speed = int(speed/ball_nums)
+#             if mass != 0:
+#                 if trg:
+#                     start = 0
+#                 else:
+#                     start = 1
+#                 i , j = key
+#                 for c in range(start,8,2):
+#                     x = (i + dx[c]) % N
+#                     y = (j + dy[c]) % N
+#                     # balls[x,y].append([mass, speed, c])
+#                     ball_tmp2.append([x,y,mass,speed,c])
+#                 balls[key] = []
+#             else:
+#                 balls[key] = []
+#     if ball_tmp2:
+#         for tmp in ball_tmp2:
+#             balls[(tmp[0], tmp[1])].append([tmp[2], tmp[3], tmp[4]])
+#     print(balls)
+# res = 0
+# for key in balls:
+#     for ball in balls[key]:
+#         res += ball[0]
+# print(res)
+
+# re-v3
+
+import sys
+from collections import defaultdict
+input = sys.stdin.readline
+
+N,M,K = map(int, input().split())
+balls = defaultdict(list)
+for _ in range(M):
+    r,c,m,s,d = map(int, input().split())
+    balls[(r-1,c-1)].append([m,s,d])
 
 dx = [-1,-1,0,1,1,1,0,-1]
 dy = [0,1,1,1,0,-1,-1,-1]
 
-
-N, M, K = map(int, input().split())
-q = deque()
-arr = [[deque() for _ in range(N+1)] for _ in range(N+1)]
-for _ in range(M):
-    r, c, m, s, d = map(int, input().split())
-    arr[r][c].append([m, s, d])
-    q.append([r, c])
-
 for _ in range(K):
-    temp = []
-    qlen = len(q)
-    for _ in range(qlen):
-        x, y = q.popleft()
-        for _ in range(len(arr[x][y])):
-            m, s, d = arr[x][y].popleft()
-            nx = (s * dx[d] + x) % N
-            ny = (s * dy[d] + y) % N
-            q.append([nx, ny])
-            temp.append([nx, ny, m, s, d])
+    ball_tmp1 = []
+    for key in balls:
+        i, j = key
+        for ball in balls[key]:
+            m, s, d = ball
+            x = (i + dx[d]*s) % N
+            y = (j + dy[d]*s) % N
+            ball_tmp1.append([x,y,m,s,d])
+            # balls[(x,y)].append([m,s,d])
+    balls = defaultdict(list)
+    for tmp in ball_tmp1:
+        balls[(tmp[0],tmp[1])].append([tmp[2],tmp[3],tmp[4]])
 
-    for x, y, m, s, d in temp:
-        arr[x][y].append([m, s, d])
-
-    for i in range(N):
-        for j in range(N):
-            if len(arr[i][j]) > 1:
-                nm, ns, odd, even, flag = 0, 0, 0, 0, 0
-                for idx, [m, s, d] in enumerate(arr[i][j]):
-                    nm += m
-                    ns += s
-                    if idx == 0:
-                        if d % 2 == 0:
-                            even = 1
-                        else:
-                            odd = 1
-                    else:
-                        if even == 1 and d % 2 == 1:
-                            flag = 1
-                        elif odd == 1 and d % 2 == 0:
-                            flag = 1
-
-                nm //= 5
-                ns //= len(arr[i][j])
-                arr[i][j] = deque()
-                if nm != 0:
-                    for idx in range(4):
-                        nd = 2 * idx if flag == 0 else 2 * idx + 1
-                        arr[i][j].append([nm, ns, nd])
-
+    ball_tmp2 = []
+    for key in balls:
+        ball_nums = len(balls[key])
+        if ball_nums >= 2:
+            mass = 0
+            speed = 0
+            direction = balls[key][0][2] % 2
+            trg = True
+            for ball in balls[key]:
+                mass += ball[0]
+                speed += ball[1]
+                if direction != (ball[2]%2):
+                    trg = False
+            mass = int(mass/5)
+            speed = int(speed/ball_nums)
+            if mass != 0:
+                if trg:
+                    start = 0
+                else:
+                    start = 1
+                i , j = key
+                for c in range(start,8,2):
+                    ball_tmp2.append([i,j,mass,speed,c])
+                balls[key] = []
+            else:
+                balls[key] = []
+    if ball_tmp2:
+        for tmp in ball_tmp2:
+            balls[(tmp[0], tmp[1])].append([tmp[2], tmp[3], tmp[4]])
 res = 0
-for i in range(N):
-    for j in range(N):
-        if arr[i][j]:
-            for info in arr[i][j]:
-                res += info[0]
+for key in balls:
+    for ball in balls[key]:
+        res += ball[0]
 print(res)
+
+
+
+
+
+
