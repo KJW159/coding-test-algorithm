@@ -144,43 +144,296 @@
 
 # v3
 
-def dfs(robot):
-    r_i, r_j, direction = robot
-    stack = [robot]
-    visited[r_i][r_j] = 1
-    cnt_tmp = 1
+# def dfs(robot):
+#     r_i, r_j, direction = robot
+#     stack = [robot]
+#     visited[r_i][r_j] = 1
+#     cnt_tmp = 1
+#
+#     while stack:
+#         r_i, r_j, direction = stack.pop()
+#         for c in range(4):
+#             x = r_i + dx[rotation[direction]]
+#             y = r_j + dy[rotation[direction]]
+#             if 0 <= x < N and 0 <= y < M:
+#                 if visited[x][y] == 0 and room[x][y] == 0:
+#                     stack.append([x, y, rotation[direction]])
+#                     visited[x][y] = 1
+#                     cnt_tmp += 1
+#                     break
+#             direction = rotation[direction]
+#             if c == 3:
+#                 backward = (direction + 2) % 4
+#                 bx = r_i + dx[backward]
+#                 by = r_j + dy[backward]
+#                 if 0 <= bx < N and 0 <= by < M:
+#                     if room[bx][by] == 1:
+#                         return cnt_tmp
+#
+#                     if room[bx][by] == 0:
+#                         stack.append([bx, by, direction])
+#
+# N, M = map(int, input().split())
+# robot = list(map(int, input().split()))
+# room = [list(map(int, input().split())) for _ in range(N)]
+# visited = [[0] * M for _ in range(N)]
+#
+# rotation = [3,0,1,2]
+# dx = [-1,0,1,0]
+# dy = [0,1,0,-1]
+#
+# clean_cnt = dfs(robot)
+# print(clean_cnt)
 
-    while stack:
-        r_i, r_j, direction = stack.pop()
-        for c in range(4):
-            x = r_i + dx[rotation[direction]]
-            y = r_j + dy[rotation[direction]]
-            if 0 <= x < N and 0 <= y < M:
-                if visited[x][y] == 0 and room[x][y] == 0:
-                    stack.append([x, y, rotation[direction]])
-                    visited[x][y] = 1
-                    cnt_tmp += 1
-                    break
-            direction = rotation[direction]
-            if c == 3:
-                backward = (direction + 2) % 4
-                bx = r_i + dx[backward]
-                by = r_j + dy[backward]
-                if 0 <= bx < N and 0 <= by < M:
-                    if room[bx][by] == 1:
-                        return cnt_tmp
 
-                    if room[bx][by] == 0:
-                        stack.append([bx, by, direction])
+# re-v1
+
+# def cleaning():
+#     stack = []
+#     stack.append(robot)
+#     arr[robot[0]][robot[1]] = 2
+#     cnt = 1
+#     r_cnt = 0
+#
+#     while stack:
+#         r, c, d = stack.pop()
+#         if r_cnt == 4:
+#             d_tmp = (d+2) % 4
+#         else:
+#             d_tmp = (d+3) % 4
+#         x = r + dx[d_tmp]
+#         y = c + dy[d_tmp]
+#         if 0 <= x < N and 0 <= y < M:
+#             if r_cnt < 4:
+#                 if arr[x][y] == 0:
+#                     stack.append([x,y,d_tmp])
+#                     cnt += 1
+#                     arr[x][y] = 2
+#                     r_cnt = 0
+#                 if arr[x][y] != 0:
+#                     stack.append([r,c,d_tmp])
+#                     r_cnt += 1
+#             if r_cnt == 4:
+#                 if arr[x][y] == 2 or arr[x][y] == 0:
+#                     stack.append([x,y,d_tmp])
+#                 if arr[x][y] == 1:
+#                     return cnt
+#     return cnt
+#
+# N, M = map(int, input().split())
+#
+# # r,c,d
+# robot = list(map(int, input().split()))
+#
+# # 0 공간 1 벽 2 청소함
+# arr = [list(map(int, input().split())) for _ in range(N)]
+#
+# # 0 상, 1 오, 2 하, 3 좌
+# dx = [-1,0,1,0]
+# dy = [0,1,0,-1]
+#
+# res = cleaning()
+# print(res)
+
+
+
+# re-v2
+# def cleaning():
+#     stack = []
+#     stack.append(robot)
+#     arr[robot[0]][robot[1]] = 2
+#     cnt = 1
+#     r_cnt = 0
+#
+#     while stack:
+#         r, c, d = stack.pop()
+#         if r_cnt == 3:
+#             d_tmp = (d+2) % 4
+#         else:
+#             d_tmp = (d+3) % 4
+#         x = r + dx[d_tmp]
+#         y = c + dy[d_tmp]
+#         if 0 <= x < N and 0 <= y < M:
+#             if r_cnt == 3:
+#                 if arr[x][y] != 1:
+#                     stack.append([x,y,d])
+#                     r_cnt = 0
+#                 else:
+#                     return cnt
+#             else:
+#                 if arr[x][y] == 0:
+#                     stack.append([x,y,d_tmp])
+#                     cnt += 1
+#                     arr[x][y] = 2
+#                     r_cnt = 0
+#                 if arr[x][y] != 0:
+#                     stack.append([r,c,d_tmp])
+#                     r_cnt += 1
+#     return cnt
+#
+# N, M = map(int, input().split())
+#
+# # r,c,d
+# robot = list(map(int, input().split()))
+#
+# # 0 공간 1 벽 2 청소함
+# arr = [list(map(int, input().split())) for _ in range(N)]
+#
+# # 0 상, 1 오, 2 하, 3 좌
+# dx = [-1,0,1,0]
+# dy = [0,1,0,-1]
+#
+# res = cleaning()
+# print(res)
+
+
+# re-v3
+# def cleaning():
+#     stack = []
+#     stack.append(robot)
+#     arr[robot[0]][robot[1]] = 2
+#     cnt = 1
+#
+#     while stack:
+#         r, c, d = stack.pop()
+#         x = r
+#         y = c
+#         d_tmp = d
+#         for i in range(4):
+#             d_tmp = (d_tmp+3) % 4
+#             nx = x + dx[d_tmp]
+#             ny = y + dy[d_tmp]
+#             if 0 <= nx < N and 0 <= ny < M:
+#                 if arr[nx][ny] == 0:
+#                     stack.append([nx, ny, d_tmp])
+#                     cnt += 1
+#                     arr[nx][ny] = 2
+#                     break
+#
+#             if i == 3:
+#                 d_tmp2 = d_tmp
+#                 d_tmp = (d_tmp+2) % 4
+#                 nx = x + dx[d_tmp]
+#                 ny = y + dy[d_tmp]
+#                 if 0 <= nx < N and 0 <= ny < M:
+#                     if arr[nx][ny] != 1:
+#                         stack.append([nx, ny, d_tmp2])
+#                     if arr[nx][ny] == 1:
+#                         return cnt
+#
+#     return cnt
+#
+# N, M = map(int, input().split())
+#
+# # r,c,d
+# robot = list(map(int, input().split()))
+#
+# # 0 공간 1 벽 2 청소함
+# arr = [list(map(int, input().split())) for _ in range(N)]
+#
+# # 0 상, 1 오, 2 하, 3 좌
+# dx = [-1,0,1,0]
+# dy = [0,1,0,-1]
+#
+# res = cleaning()
+# print(res)
+
+
+# re-v4
+# def cleaning():
+#     stack = []
+#     stack.append(robot)
+#     arr[robot[0]][robot[1]] = 2
+#     cnt = 1
+#
+#     while stack:
+#         r, c, d = stack.pop()
+#         for i in range(4):
+#             d = (d+3) % 4
+#             nx = r + dx[d]
+#             ny = c + dy[d]
+#             if 0 <= nx < N and 0 <= ny < M:
+#                 if arr[nx][ny] == 0:
+#                     stack.append([nx, ny, d])
+#                     cnt += 1
+#                     arr[nx][ny] = 2
+#                     break
+#
+#             if i == 3:
+#                 d_tmp = d
+#                 d = (d+2) % 4
+#                 nx = r + dx[d]
+#                 ny = c + dy[d]
+#                 if 0 <= nx < N and 0 <= ny < M:
+#                     if arr[nx][ny] != 1:
+#                         stack.append([nx, ny, d_tmp])
+#                     if arr[nx][ny] == 1:
+#                         return cnt
+#
+#     return cnt
+#
+# N, M = map(int, input().split())
+#
+# # r,c,d
+# robot = list(map(int, input().split()))
+#
+# # 0 공간 1 벽 2 청소함
+# arr = [list(map(int, input().split())) for _ in range(N)]
+#
+# # 0 상, 1 오, 2 하, 3 좌
+# dx = [-1,0,1,0]
+# dy = [0,1,0,-1]
+#
+# print(cleaning())
+
+# re-v5
+
+def cleaning(robot):
+    cnt = 0
+
+    while True:
+        r_i, r_j, r_d = robot
+        if room[r_i][r_j] == 0:
+            room[r_i][r_j] = 2
+            cnt += 1
+        for i in range(4):
+            # r_d = (r_d+1) % 4
+            r_d = (r_d + 3) % 4
+            r_x = r_i + dx[r_d]
+            r_y = r_j + dy[r_d]
+            if room[r_x][r_y] == 0:
+                robot = [r_x, r_y, r_d]
+                break
+            if i == 3:
+                r_d2 = (r_d+2)%4
+                r_x = r_i + dx[r_d2]
+                r_y = r_j + dy[r_d2]
+                if room[r_x][r_y] == 1:
+                    return cnt
+                else:
+                    robot = [r_x, r_y, r_d]
 
 N, M = map(int, input().split())
+
 robot = list(map(int, input().split()))
 room = [list(map(int, input().split())) for _ in range(N)]
-visited = [[0] * M for _ in range(N)]
 
-rotation = [3,0,1,2]
 dx = [-1,0,1,0]
 dy = [0,1,0,-1]
 
-clean_cnt = dfs(robot)
-print(clean_cnt)
+print(cleaning(robot))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
