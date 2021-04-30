@@ -238,28 +238,63 @@ import sys
 #     print(parents[i])
 
 # re-v2
-def finding_parents_dfs():
-    stack = []
-    stack.append(1)
-    parents[1] = 1
+# def finding_parents_dfs():
+#     stack = []
+#     stack.append(1)
+#     parents[1] = 1
+#     while stack:
+#         node = stack.pop()
+#         for child in adj_list[node]:
+#             if parents[child] == 0:
+#                 stack.append(child)
+#                 parents[child] = node
+#
+#
+# N = int(input())
+# adj_list = [[] for _ in range(N+1)]
+#
+# parents = [0]*(N+1)
+# for _ in range(N-1):
+#     u, v = map(int, input().split())
+#     adj_list[u].append(v)
+#     adj_list[v].append(u)
+#
+# finding_parents_dfs()
+#
+# for i in range(2,N+1):
+#     print(parents[i])
+
+
+# re-v3
+
+
+def dfs():
+    stack = [1]
+
     while stack:
         node = stack.pop()
-        for child in adj_list[node]:
-            if parents[child] == 0:
-                stack.append(child)
-                parents[child] = node
+        for next_node in adj_list[node]:
+            if parents[next_node] == 0:
+                stack.append(next_node)
+                parents[next_node] = node
 
 
 N = int(input())
 adj_list = [[] for _ in range(N+1)]
+for i in range(N-1):
+    a, b = map(int, input().split())
+    adj_list[a].append(b)
+    adj_list[b].append(a)
 
 parents = [0]*(N+1)
-for _ in range(N-1):
-    u, v = map(int, input().split())
-    adj_list[u].append(v)
-    adj_list[v].append(u)
+parents[1] = 1
 
-finding_parents_dfs()
-
-for i in range(2,N+1):
+dfs()
+for i in range(2, N+1):
     print(parents[i])
+
+
+
+
+
+
