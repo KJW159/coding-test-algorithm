@@ -108,55 +108,100 @@ import collections
 from collections import deque
 
 
+# def bfs():
+#     dx = [0,-1,0,1]
+#     dy = [-1,0,1,0]
+#
+#     queue = deque()
+#
+#     for tomato in tomatos:
+#         queue.append([tomato[0], tomato[1]])
+#
+#     while queue:
+#         t_i, t_j = queue.popleft()
+#         for c in range(4):
+#             x = t_i + dx[c]
+#             y = t_j + dy[c]
+#             if 0 <= x < N and 0 <= y < M:
+#                 if box[x][y] == 0:
+#                     queue.append([x,y])
+#                     box[x][y] = box[t_i][t_j] + 1
+#
+#
+# M, N = map(int, input().split())
+# box = [list(map(int, input().split())) for _ in range(N)]
+# res = 0
+# days = 0
+# tomatos = []
+# for i in range(N):
+#     for j in range(M):
+#         if box[i][j] == 1:
+#             tomatos.append([i,j])
+# bfs()
+# trg = False
+# for i in range(N):
+#     if trg:
+#         res = -1
+#         break
+#     for j in range(M):
+#         if box[i][j] == 0:
+#             trg = True
+#             break
+#         elif box[i][j] > days:
+#             days = box[i][j]
+#
+# if trg:
+#     print(res)
+# else:
+#     print(days-1)
+
+
+
+
+# re-v2
+
+
+from collections import deque
+
 def bfs():
-    dx = [0,-1,0,1]
-    dy = [-1,0,1,0]
-
-    queue = deque()
-
-    for tomato in tomatos:
-        queue.append([tomato[0], tomato[1]])
+    global res
+    queue = deque(tomato)
+    cnt = 0
 
     while queue:
-        t_i, t_j = queue.popleft()
+        s_i, s_j = queue.popleft()
         for c in range(4):
-            x = t_i + dx[c]
-            y = t_j + dy[c]
+            x = s_i + dx[c]
+            y = s_j + dy[c]
             if 0 <= x < N and 0 <= y < M:
-                if box[x][y] == 0:
+                if farm[x][y] == 0:
                     queue.append([x,y])
-                    box[x][y] = box[t_i][t_j] + 1
-
+                    farm[x][y] = farm[s_i][s_j] + 1
+                    res = max(res, farm[x][y])
+                    cnt += 1
+    return cnt
 
 M, N = map(int, input().split())
-box = [list(map(int, input().split())) for _ in range(N)]
-res = 0
-days = 0
-tomatos = []
-for i in range(N):
-    for j in range(M):
-        if box[i][j] == 1:
-            tomatos.append([i,j])
-bfs()
-trg = False
-for i in range(N):
-    if trg:
-        res = -1
-        break
-    for j in range(M):
-        if box[i][j] == 0:
-            trg = True
-            break
-        elif box[i][j] > days:
-            days = box[i][j]
+farm = [list(map(int, input().split())) for _ in range(N)]
 
-if trg:
+tomato = []
+tomato_zero = 0
+res = 0
+
+dx = [0,-1,0,1]
+dy = [-1,0,1,0]
+for i in range(N):
+    for j in range(M):
+        if farm[i][j] == 1:
+            tomato.append([i,j])
+        if farm[i][j] == 0:
+            tomato_zero += 1
+
+red_tomato = bfs()
+
+if red_tomato == tomato_zero:
+    res -= 1
+    res = max(res, 0)
     print(res)
 else:
-    print(days-1)
-
-
-
-
-
-
+    print(-1)
